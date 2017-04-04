@@ -18,7 +18,6 @@ class BHPNet:
 
     def usage(self):
         print("BHP Net Tool\n\n")
-        print()
         print("Usage: bhpnet.py -t target_host -p port")
         print("-l --listen              - listen on [host]:[port] for incoming connections")
         print("-e --execute=file_to_run - execute the given file upon receiving a connection")
