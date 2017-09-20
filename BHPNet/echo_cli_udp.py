@@ -19,6 +19,7 @@ s = socket.socket( socket.AF_INET,socket.SOCK_DGRAM )
 print( "Introduce el mensaje que quieres enviar (mensaje vacío para terminar):" )
 while True:
 	mensaje = input()
+	ms = ""
 	if not mensaje:
 		break
 	"""A COMPLETAR POR EL ALUMNO:
@@ -33,11 +34,12 @@ while True:
 
 	#DIVIDIENDO EN PAQUETES
 	i = 1
-	while (len(mensaje.encode())>10):
+	while (len(mensaje.encode())>=10):
 		m = mensaje.encode()[0:9]
 		s.sendto(m, dir_serv)
 		buf = s.recv(10)
-		print("Dato "+str(i)+" recibidos del servidor: ", buf.decode())		
+		print("Dato "+str(i)+" recibidos del servidor: ", buf.decode())	
+		ms = ms + m.decode()	
 		mensaje = mensaje[9:]
 		i = i+1
 	
@@ -45,6 +47,9 @@ while True:
 		s.sendto(mensaje.encode(), dir_serv)
 		buf = s.recv(10)
 		print("Dato "+str(i)+" recibidos del servidor: ", buf.decode())
+		ms = ms + mensaje
+
+	print("El paquete completo contiene: "+ms)
 			
 	
 """A COMPLETAR POR EL ALUMNO:
