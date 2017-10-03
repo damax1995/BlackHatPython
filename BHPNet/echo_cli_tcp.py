@@ -1,30 +1,31 @@
+#!/usr/bin/env python3
+
 import socket, sys
 
-PORT = 50001
+PORT = 50004
 
-# Comprueba que se ha pasado un argumento.
 if len( sys.argv ) != 2:
 	print( "Uso: {} <servidor>".format( sys.argv[0] ) )
 	exit( 1 )
+
 dir_serv = (sys.argv[1], PORT)
 
-#Creamos el socket
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+s.connect( dir_serv )
 
-#Conectamos el cliente al servidor
-s.connect(dir_serv)
-
-#Gestionamos info
-print("Introduce el mensaje que quieres enviar (vacio = fin): ")
+print( "Introduce el mensaje que quieres enviar (mensaje vacío para terminar):" )
 while True:
 	mensaje = input()
 	if not mensaje:
 		break
-	
-	#Mandamos el mensaje al server
-	s.send(mensaje.encode())
-	#Recibimos respuesta del server
-	buf = s.recv(1024)
-	print("Datos recibidos del servidor: " + buf.decode())
-
+	s.sendall( mensaje.encode() )
+	# Es necesario un blucle porque no hay garantías de que la respuesta
+	# completa se reciba en una única lectura.
+	bytes_por_leer = len( mensaje.encode() )
+	mensaje = b""
+	while bytes_por_leer:
+		buf = s.recv( bytes_por_leer )
+		mensaje += buf
+		bytes_por_leer -= len( buf )
+	print( mensaje.decode() )
 s.close()
